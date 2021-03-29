@@ -2,7 +2,9 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    STATION_MAP_FILE_PATH: str = './StationMap.csv'
+    API_V1_STR: str = '/api/v1'
+
+    STATION_MAP_FILE_PATH: str = 'app/StationMap.csv'
 
     TIME_FORMAT: str = '%Y-%m-%dT%H:%M'
 

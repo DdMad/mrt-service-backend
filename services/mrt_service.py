@@ -2,8 +2,8 @@ from collections import deque
 import csv
 import heapq
 
-from ..core.config import settings
-from ..core.utils import convert_time_range_to_minute_range, convert_string_to_time
+from app.core.config import settings
+from app.core.utils import convert_time_range_to_minute_range, convert_string_to_time
 
 class MrtService:
     def __init__(self):
@@ -172,9 +172,9 @@ class Station:
     def __str__(self):
         return f'(id:{self.id}, name:{self.name}, open_date:{self.open_date})'
 
-m = MrtService()
-(time, path) = m.find_route_by_time('NS1', 'NS16', '2021-03-30T08:00')
-print(time)
-print([s.id for s in path])
+mrt_service = MrtService()
+# (time, path) = m.find_route_by_time('NS1', 'NS16', '2021-03-30T08:00')
+# print(time)
+# print([s.id for s in path])
 # t = m.get_transport_time(m.station_mapping['EW4'], m.station_mapping['CG0'], convert_string_to_time('2021-03-30T08:00'))
 # print(t)

@@ -1,15 +1,11 @@
-from ..core.utils import convert_string_to_time
-from ..services.mrt_service import MrtService
+from app.core.utils import convert_string_to_time
+from app.services.mrt_service import MrtService
 
 
 class TestMrtService:
     @classmethod
     def setup_class(cls):
-        """ setup any state specific to the execution of the given class (which
-        usually contains tests).
-        """
         cls.mrt_service = MrtService()
-        print('init')
 
     def test_get_transport_time(self):
         service = self.__class__.mrt_service

@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from .services.mrt_service import MrtService
+from app.api.api import router
+from app.services.mrt_service import MrtService
+from app.core.config import settings
 
 
 app = FastAPI()
@@ -7,9 +9,6 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    mrt_map = MrtService()
-    paths = mrt_map.find_route_by_stop('EW1', 'CC1')
-    result = []
-    for path in paths:
-        result.append(str([s.id for s in path]))
-    return result
+    return 'Hello World!'
+
+app.include_router(router, prefix=settings.API_V1_STR)
