@@ -35,7 +35,8 @@ def test_convert_path_to_steps():
         "Change EW to CC",
         "Take CC from CC22 Buona Vista to CC15 Bishan",
         "Change CC to NS",
-        "Take NS from NS17 Bishan to NS16 Ang Mo Kio"
+        "Take NS from NS17 Bishan to NS16 Ang Mo Kio",
+        "In total it takes 13 stops"
     ]
     expected_with_estimate = [
         "Take NS from NS1 Jurong East to NS1 Jurong East",

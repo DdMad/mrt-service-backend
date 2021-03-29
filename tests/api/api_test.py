@@ -6,7 +6,7 @@ client = TestClient(app)
 
 
 def test_find_route_by_stop():
-    response = client.get("/api/v1/find-route-by-stop?origin=NS1&destination=NS15")
+    response = client.get("/api/v1/find-route-by-stop?origin=NS1&destination=NS16")
     assert response.status_code == 200
     assert response.json() == [
         "Take NS from NS1 Jurong East to NS1 Jurong East",
@@ -15,7 +15,8 @@ def test_find_route_by_stop():
         "Change EW to CC",
         "Take CC from CC22 Buona Vista to CC15 Bishan",
         "Change CC to NS",
-        "Take NS from NS17 Bishan to NS16 Ang Mo Kio"
+        "Take NS from NS17 Bishan to NS16 Ang Mo Kio",
+        "In total it takes 13 stops"
     ]
 
 def test_find_route_by_time():

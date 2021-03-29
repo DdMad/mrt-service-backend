@@ -1,13 +1,18 @@
 from collections import deque
 import csv
+import datetime
 import heapq
+from typing import List, Tuple
 
 from app.core.config import settings
 from app.core.utils import convert_time_range_to_minute_range, convert_string_to_time
+from app.models.station import Station
 
 class MrtService:
-    def __init__(self):
-        # Get station data from map file
+    def __init__(self) -> None:
+        '''
+        Initialize mrt service, mainly about loading station data.
+        '''
         self.stations = []
         with open(settings.STATION_MAP_FILE_PATH, 'r') as f:
             csvreader = csv.reader(f)
@@ -17,8 +22,10 @@ class MrtService:
         self.__build_normal_station_paths()
         self.__build_interchange_station_paths()
 
-    def __build_normal_station_paths(self):
-        # Build path for normal stations
+    def __build_normal_station_paths(self) -> None:
+        '''
+        Build path for normal stations.
+        '''
         current_line = self.stations[0].line
         prev_station = None
         self.station_mapping = {}
@@ -32,8 +39,10 @@ class MrtService:
                 current_line = station.line
             prev_station = station
         
-    def __build_interchange_station_paths(self):
-        # Build path for interchange stations
+    def __build_interchange_station_paths(self) -> None:
+        '''
+        Build path for interchange stations.
+        '''
         station_name_id_mapping = {}
         for station in self.stations:
             if station.name not in station_name_id_mapping:
@@ -48,7 +57,10 @@ class MrtService:
                         if id1 != id2:
                             self.station_mapping[id1].next.append(self.station_mapping[id2])
     
-    def is_in_peak_hours(self, time):
+    def is_in_peak_hours(self, time: datetime.datetime) -> bool:
+        '''
+        Check if the given time is in any peak hours.
+        '''
         if time.isoweekday() not in settings.PEAK_HOURS_CONFIG['days']:
             return False
         minute_range = []
@@ -60,7 +72,10 @@ class MrtService:
                 return True
         return False
 
-    def is_in_night_hours(self, time):
+    def is_in_night_hours(self, time: datetime.datetime) -> bool:
+        '''
+        Check if the given time is in any night hours.
+        '''
         if time.isoweekday() not in settings.NIGHT_HOURS_CONFIG['days']:
             return False     
         minute_range = []
@@ -72,12 +87,16 @@ class MrtService:
                 return True
         return False
 
-    def get_transport_time(self, current, next, time):
+    def get_transport_time(self, current: str, next: str, time: datetime.datetime) -> int:
+        '''
+        Get the transport time from the current station to next adjacent station at the given time.
+        '''
         peak_hour_config = settings.PEAK_HOURS_CONFIG['time_taken']
         night_hour_config = settings.NIGHT_HOURS_CONFIG['time_taken']
         night_hour_unavailable_lines = settings.NIGHT_HOURS_CONFIG['exclude']
         non_peak_hour_config = settings.NON_PEAK_HOURS_CONFIG['time_taken']
 
+        # Check if the given time is in peak hours
         if self.is_in_peak_hours(time):
             if current.line == next.line:
                 if current.line in peak_hour_config:
@@ -86,6 +105,7 @@ class MrtService:
                     return peak_hour_config['others']
             else:
                 return peak_hour_config['change']
+        # Check if the given time is in night hours
         elif self.is_in_night_hours(time):
             if current.line in night_hour_unavailable_lines or next.line in night_hour_unavailable_lines:
                 return -1
@@ -96,6 +116,7 @@ class MrtService:
                     return night_hour_config['others']
             else:
                 return night_hour_config['change']
+        # The given time is in the non-peak hours
         else:
             if current.line == next.line:
                 if current.line in non_peak_hour_config:
@@ -105,7 +126,11 @@ class MrtService:
             else:
                 return non_peak_hour_config['change']
 
-    def find_route_by_time(self, origin, destination, start_time):
+    def find_route_by_time(self, origin: str, destination: str, start_time: str) -> Tuple[int, List[Station]]:
+        '''
+        Find the route between 2 stations that takes the least time at given time.
+        Here we use Dijkstra's algorithm to compute the path.
+        '''
         start_datetime = convert_string_to_time(start_time)
         origin_station = self.station_mapping[origin]
         visited = set()
@@ -126,23 +151,20 @@ class MrtService:
                     next_time = current_time + self.get_transport_time(next_path[-2], next_path[-1], start_datetime)
                     heapq.heappush(queue, (next_time, next_path))
 
-    def find_route_by_stop(self, origin, destination):
+    def find_route_by_stop(self, origin: str, destination: str) -> List[Station]:
+        '''
+        Find the route between 2 stations that takes the least stops.
+        Here we use BFS algorithm to compute the path.
+        '''
         origin_station = self.station_mapping[origin]
-        visited_queue = deque()
-        visited_queue.appendleft(set())
+        visited = set()
         queue = deque()
         queue.appendleft([origin_station])
-        paths = []
         while queue:
             path = queue.pop()
-            visited = visited_queue.pop()
             current = path[-1]
             if current.id == destination:
-                paths.append(path)
-                if len(paths) >= 3:
-                    break
-                else:
-                    continue
+                return path
             if current.id in visited:
                 continue
             visited.add(current.id)
@@ -151,30 +173,6 @@ class MrtService:
                     next_path = list(path)
                     next_path.append(next_station)
                     queue.appendleft(next_path)
-                    visited_queue.appendleft(set(visited))
-        return paths
 
-
-class Station:
-    def __init__(self, id, name, open_date):
-        self.id = id
-        self.line = id[:2]
-        self.name = name
-        self.open_date = open_date
-        self.next = []
-
-    def __lt__(self, s2):
-        return self.name < s2.name
-
-    def __repr__(self):
-        return f'Station({self.id}, {self.name}, {self.open_date}, {self.next})'
-
-    def __str__(self):
-        return f'(id:{self.id}, name:{self.name}, open_date:{self.open_date})'
 
 mrt_service = MrtService()
-# (time, path) = m.find_route_by_time('NS1', 'NS16', '2021-03-30T08:00')
-# print(time)
-# print([s.id for s in path])
-# t = m.get_transport_time(m.station_mapping['EW4'], m.station_mapping['CG0'], convert_string_to_time('2021-03-30T08:00'))
-# print(t)

@@ -1,9 +1,14 @@
 import datetime
-from typing import Any, List
+from typing import Any, List, Tuple
 from app.core.config import settings
 
 
-def convert_time_range_to_minute_range(time_range):
+def convert_time_range_to_minute_range(time_range: Tuple[str, str]) -> List[Tuple[int, int]]:
+    '''
+    Convert tuple of time range string to tuple of minutes.
+    E.g. 1. (10:00, 12:00) -> [(600, 720)]
+    E.g. 2. (20:00, 04:00) -> [(1200, 1440), (0, 240)]
+    '''
     start = time_range[0].split(':')
     end = time_range[1].split(':')
 
@@ -17,10 +22,23 @@ def convert_time_range_to_minute_range(time_range):
     return [(start_hour * 60 + start_minute, end_hour * 60 + end_minute)]
 
 
-def convert_string_to_time(time_str: str):
+def convert_string_to_time(time_str: str) -> datetime.datetime:
+    '''
+    Convert date time string to datetime.
+    '''
     return datetime.datetime.strptime(time_str, settings.TIME_FORMAT)
 
-def convert_path_to_steps(path: List[str], estimate: int=None):
+def convert_path_to_steps(path: List[str], estimate: int=None) -> List[str]:
+    '''
+    Convert path to human readable steps.
+    E.g. ['EW1', 'EW2', 'EW3', 'EW4', 'CG0', 'CG1'] will be converted to
+    [
+        'Take EW from EW1 Pasir Ris to EW4 Tanah Merah',
+        'Change EW to CG',
+        'Take CG from CG0 to CG1',
+        'In total it takes 5 stops'
+    ]
+    '''
     start = None
     prev = None
     steps = []
@@ -38,4 +56,6 @@ def convert_path_to_steps(path: List[str], estimate: int=None):
         steps.append(f'Take {start.line} from {start.id} {start.name} to {prev.id} {prev.name}')
     if estimate is not None:
         steps.append(f'The total estimated time is {estimate} minutes')
+    else:
+        steps.append(f'In total it takes {len(path) - 1} stops')
     return steps

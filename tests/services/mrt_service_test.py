@@ -36,6 +36,14 @@ class TestMrtService:
 
     def test_find_route_by_stop(self):
         service = self.__class__.mrt_service
+        origin = 'NS1'
+        destination = 'NS16'
+        assert [s.id for s in service.find_route_by_stop(origin, destination)] == ['NS1', 'EW24', 'EW23', 'EW22', 'EW21', 'CC22', 'CC21', 'CC20', 'CC19', 'CC17', 'CC16', 'CC15', 'NS17', 'NS16']
 
     def test_find_route_by_route(self):
         service = self.__class__.mrt_service
+        origin = 'NS1'
+        destination = 'NS16'
+        (time, path) = service.find_route_by_time(origin, destination, '2021-03-30T08:00')
+        assert [s.id for s in path] == ['NS1', 'EW24', 'EW23', 'EW22', 'EW21', 'CC22', 'CC21', 'CC20', 'CC19', 'CC17', 'CC16', 'CC15', 'NS17', 'NS16']
+        assert time == 147
