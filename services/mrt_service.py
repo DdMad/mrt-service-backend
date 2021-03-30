@@ -6,6 +6,7 @@ from typing import List, Tuple
 
 from app.core.config import settings
 from app.core.utils import convert_time_range_to_minute_range, convert_string_to_time
+from app.exceptions.invalid_input_exception import InvalidInputException
 from app.models.station import Station
 
 class MrtService:
@@ -131,6 +132,13 @@ class MrtService:
         Find the route between 2 stations that takes the least time at given time.
         Here we use Dijkstra's algorithm to compute the path.
         '''
+        # Validate input
+        if origin.upper() not in self.station_mapping:
+            raise InvalidInputException(f'Station {origin.upper()} not exists')
+        if destination.upper() not in self.station_mapping:
+            raise InvalidInputException(f'Station {destination.upper()} not exists')
+
+        # Find route
         start_datetime = convert_string_to_time(start_time)
         origin_station = self.station_mapping[origin]
         visited = set()
@@ -156,14 +164,21 @@ class MrtService:
         Find the route between 2 stations that takes the least stops.
         Here we use BFS algorithm to compute the path.
         '''
-        origin_station = self.station_mapping[origin]
+        # Validate
+        if origin.upper() not in self.station_mapping:
+            raise InvalidInputException(f'Station {origin} not exists')
+        if destination.upper() not in self.station_mapping:
+            raise InvalidInputException(f'Station {destination} not exists')
+
+        # Find route
+        origin_station = self.station_mapping[origin.upper()]
         visited = set()
         queue = deque()
         queue.appendleft([origin_station])
         while queue:
             path = queue.pop()
             current = path[-1]
-            if current.id == destination:
+            if current.id == destination.upper():
                 return path
             if current.id in visited:
                 continue
