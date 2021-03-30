@@ -16,12 +16,16 @@ def find_route_by_stop(
     '''
     Find the route between two stations which has the least stops.
     '''
+    result = None
     try:
         path = mrt_service.find_route_by_stop(origin, destination)
+        result = convert_path_to_steps(path)
     except InvalidInputException as iie:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return [f'Error: {str(iie)}']
-    result = convert_path_to_steps(path)
+    except Exception as e:
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return [f'Error: {str(e)}']
     return result
 
 
@@ -35,10 +39,14 @@ def find_route_by_time(
     '''
     Find the route between two stations at given time which takes the least time.
     '''
+    result = None
     try:
         (time, path) = mrt_service.find_route_by_time(origin, destination, time)
+        result = convert_path_to_steps(path, estimate=time)
     except InvalidInputException as iie:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return [f'Error: {str(iie)}']
-    result = convert_path_to_steps(path, estimate=time)
+    except Exception as e:
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return [f'Error: {str(e)}']
     return result

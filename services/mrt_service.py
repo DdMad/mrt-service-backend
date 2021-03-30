@@ -134,9 +134,9 @@ class MrtService:
         '''
         # Validate input
         if origin.upper() not in self.station_mapping:
-            raise InvalidInputException(f'Station {origin.upper()} not exists')
+            raise InvalidInputException(f'Station {origin.upper()} does not exists')
         if destination.upper() not in self.station_mapping:
-            raise InvalidInputException(f'Station {destination.upper()} not exists')
+            raise InvalidInputException(f'Station {destination.upper()} does not exists')
 
         # Find route
         start_datetime = convert_string_to_time(start_time)
@@ -166,9 +166,9 @@ class MrtService:
         '''
         # Validate
         if origin.upper() not in self.station_mapping:
-            raise InvalidInputException(f'Station {origin} not exists')
+            raise InvalidInputException(f'Station {origin} does not exists')
         if destination.upper() not in self.station_mapping:
-            raise InvalidInputException(f'Station {destination} not exists')
+            raise InvalidInputException(f'Station {destination} does not exists')
 
         # Find route
         origin_station = self.station_mapping[origin.upper()]
