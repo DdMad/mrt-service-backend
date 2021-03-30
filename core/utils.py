@@ -55,7 +55,7 @@ def convert_path_to_steps(path: List[str], estimate: int=None) -> List[str]:
     if end.line == start.line and end.id != start.id:
         steps.append(f'Take {start.line} from {start.id} {start.name} to {prev.id} {prev.name}')
     if estimate is not None:
-        steps.append(f'The total estimated time is {estimate} minutes')
+        steps.append(f'Done! Reach {end.id} {end.name}. The total estimated time is {estimate} minutes')
     else:
-        steps.append(f'In total it takes {len(path) - 1} stops')
+        steps.append(f'Done! Reach {end.id} {end.name}. In total it takes {len(path) - 1} stops')
     return steps
