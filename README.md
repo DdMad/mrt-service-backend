@@ -8,7 +8,7 @@ Python 3.6+
 ### Run
 First, clone the repo or get the repo from somewhere. And then:
 ```bash
-pip install -r requirements.txt
+pip install -r app/requirements.txt
 ```
 Once `pip install` completes, run:
 ```bash
