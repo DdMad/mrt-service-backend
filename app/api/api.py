@@ -10,8 +10,8 @@ router = APIRouter()
 @router.get('/find-route-by-stop')
 def find_route_by_stop(
     response: Response,
-    origin: str = Query(None, min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
-    destination: str = Query(None, min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
+    origin: str = Query(..., min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
+    destination: str = Query(..., min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
     ) -> Any:
     '''
     Find the route between two stations which has the least stops.
@@ -32,9 +32,9 @@ def find_route_by_stop(
 @router.get('/find-route-by-time')
 def find_route_by_time(
     response: Response,
-    origin: str = Query(None, min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
-    destination: str = Query(None, min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
-    time: str = Query(None, min_length=16, max_length=16, regex="^[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}T[0-9]{1,2}:[0-9]{1,2}$"),
+    origin: str = Query(..., min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
+    destination: str = Query(..., min_length=3, max_length=4, regex="^[a-zA-Z]{2}[0-9]{1,2}$"),
+    time: str = Query(..., min_length=16, max_length=16, regex="^[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}T[0-9]{1,2}:[0-9]{1,2}$"),
     ) -> Any:
     '''
     Find the route between two stations at given time which takes the least time.
