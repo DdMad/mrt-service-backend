@@ -1,7 +1,8 @@
 from fastapi import FastAPI
+
 from app.api.api import router
-from app.services.mrt_service import MrtService
 from app.core.config import settings
+from app.services.mrt_service import MrtService
 
 
 app = FastAPI()

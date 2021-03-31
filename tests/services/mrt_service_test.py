@@ -1,5 +1,4 @@
 import pytest
-
 from app.core.utils import convert_string_to_time
 from app.exceptions.invalid_input_exception import InvalidInputException
 from app.services.mrt_service import MrtService

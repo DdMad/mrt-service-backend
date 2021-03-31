@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Query, Response, status
 from typing import Any, List
-from app.services.mrt_service import mrt_service
+
 from app.core.utils import convert_path_to_steps
 from app.exceptions.invalid_input_exception import InvalidInputException
-
+from app.services.mrt_service import mrt_service
+from fastapi import APIRouter, Query, Response, status
 
 router = APIRouter()
 

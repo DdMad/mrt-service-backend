@@ -1,5 +1,7 @@
 import datetime
-from app.core.utils import convert_time_range_to_minute_range, convert_string_to_time, convert_path_to_steps
+
+from app.core.utils import (convert_path_to_steps, convert_string_to_time,
+                            convert_time_range_to_minute_range)
 from app.services.mrt_service import Station
 
 

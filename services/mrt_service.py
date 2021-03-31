@@ -1,13 +1,15 @@
-from collections import deque
 import csv
 import datetime
 import heapq
+from collections import deque
 from typing import List, Tuple
 
 from app.core.config import settings
-from app.core.utils import convert_time_range_to_minute_range, convert_string_to_time
+from app.core.utils import (convert_string_to_time,
+                            convert_time_range_to_minute_range)
 from app.exceptions.invalid_input_exception import InvalidInputException
 from app.models.station import Station
+
 
 class MrtService:
     def __init__(self) -> None:
