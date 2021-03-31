@@ -4,6 +4,8 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     API_V1_STR: str = '/api/v1'
 
+    TIME_SPLITTER: str = ':'
+
     STATION_MAP_FILE_PATH: str = 'app/StationMap.csv'
 
     TIME_FORMAT: str = '%Y-%m-%dT%H:%M'

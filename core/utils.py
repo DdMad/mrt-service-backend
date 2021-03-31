@@ -1,6 +1,7 @@
 import datetime
 from typing import Any, List, Tuple
 
+from app.core.constants import MINUTES_OF_ONE_HOUR, HOURS_OF_ONE_DAY
 from app.core.config import settings
 
 
@@ -10,8 +11,8 @@ def convert_time_range_to_minute_range(time_range: Tuple[str, str]) -> List[Tupl
     E.g. 1. (10:00, 12:00) -> [(600, 720)]
     E.g. 2. (20:00, 04:00) -> [(1200, 1440), (0, 240)]
     '''
-    start = time_range[0].split(':')
-    end = time_range[1].split(':')
+    start = time_range[0].split(settings.TIME_SPLITTER)
+    end = time_range[1].split(settings.TIME_SPLITTER)
 
     start_hour = int(start[0])
     start_minute = int(start[1])
@@ -19,8 +20,8 @@ def convert_time_range_to_minute_range(time_range: Tuple[str, str]) -> List[Tupl
     end_minute = int(end[1])
 
     if start_hour > end_hour or (start_hour == end_hour and start_minute > end_minute):
-        return [(start_hour * 60 + start_minute, 24 * 60), (0, end_hour * 60 + end_minute)]
-    return [(start_hour * 60 + start_minute, end_hour * 60 + end_minute)]
+        return [(start_hour * MINUTES_OF_ONE_HOUR + start_minute, HOURS_OF_ONE_DAY * MINUTES_OF_ONE_HOUR), (0, end_hour * MINUTES_OF_ONE_HOUR + end_minute)]
+    return [(start_hour * MINUTES_OF_ONE_HOUR + start_minute, end_hour * MINUTES_OF_ONE_HOUR + end_minute)]
 
 
 def convert_string_to_time(time_str: str) -> datetime.datetime:
@@ -36,8 +37,8 @@ def convert_path_to_steps(path: List[str], estimate: int=None) -> List[str]:
     [
         'Take EW from EW1 Pasir Ris to EW4 Tanah Merah',
         'Change EW to CG',
-        'Take CG from CG0 to CG1',
-        'In total it takes 5 stops'
+        'Take CG from CG0 Tanah Merah to CG1 Expo',
+        'Done! Reach CG1 Expo. In total it takes 5 stops'
     ]
     '''
     start = None

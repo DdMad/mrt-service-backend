@@ -16,10 +16,10 @@ def test_find_route_by_stop():
         "Take CC from CC22 Buona Vista to CC15 Bishan",
         "Change CC to NS",
         "Take NS from NS17 Bishan to NS16 Ang Mo Kio",
-        "In total it takes 13 stops"
+        "Done! Reach NS16 Ang Mo Kio. In total it takes 13 stops"
     ]
 
-def test_find_route_by_stop_invalid_input():
+def test_find_route_by_stop_with_error():
     response = client.get("/api/v1/find-route-by-stop?origin=NS88&destination=NS99")
     assert response.status_code == 400
     assert response.json() == [
@@ -43,10 +43,10 @@ def test_find_route_by_time():
         "Take CC from CC22 Buona Vista to CC15 Bishan",
         "Change CC to NS",
         "Take NS from NS17 Bishan to NS16 Ang Mo Kio",
-        "The total estimated time is 147 minutes"
+        "Done! Reach NS16 Ang Mo Kio. The total estimated time is 147 minutes"
     ]
 
-def test_find_route_by_time_invalid_input():
+def test_find_route_by_time_with_error():
     response = client.get("/api/v1/find-route-by-time?origin=NS88&destination=NS99&time=2021-03-30T08:00")
     assert response.status_code == 400
     assert response.json() == [
