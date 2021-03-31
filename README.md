@@ -3,10 +3,10 @@
 This is a backend service that provides APIs to compute a route between 2 MRT stations that has least stops to travel or takes least time to travel.
 ## Get Started
 ### Requirement
-Python 3.6+
+Python 3.6.10+
 
 ### Run
-First, clone the repo or get the repo from somewhere. And then:
+First, clone the repo and then:
 ```bash
 pip install -r app/requirements.txt
 ```

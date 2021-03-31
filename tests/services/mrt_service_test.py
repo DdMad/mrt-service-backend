@@ -55,3 +55,5 @@ class TestMrtService:
 
         with pytest.raises(InvalidInputException):
             service.find_route_by_time('NS88', 'NS99', '2021-03-30T08:00')
+        with pytest.raises(InvalidInputException):
+            service.find_route_by_time('DT1', 'DT2', '2021-03-30T04:00')
